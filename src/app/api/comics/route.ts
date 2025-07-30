@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,8 +13,8 @@ export async function GET(request: NextRequest) {
     const where = search
       ? {
           OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { author: { contains: search, mode: 'insensitive' } },
+            { title: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { author: { contains: search, mode: Prisma.QueryMode.insensitive } },
             { genres: { has: search } },
           ],
         }
