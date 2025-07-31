@@ -7,7 +7,13 @@ import { AddChapterForm } from '@/components/admin/AddChapterForm'
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState('manga')
-  const [dbStatus, setDbStatus] = useState<any>(null)
+  const [dbStatus, setDbStatus] = useState<{
+    status: string;
+    message: string;
+    comicCount?: number;
+    error?: string;
+    timestamp: string;
+  } | null>(null)
   const [testingDb, setTestingDb] = useState(false)
 
   const testDatabase = async () => {
@@ -20,7 +26,8 @@ export default function Admin() {
       setDbStatus({
         status: 'error',
         message: 'Failed to test database connection',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
       })
     } finally {
       setTestingDb(false)

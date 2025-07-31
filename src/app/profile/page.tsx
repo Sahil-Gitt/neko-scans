@@ -1,5 +1,5 @@
 import { Header } from '@/components/Header'
-import { User, Settings, BookOpen, Heart } from 'lucide-react'
+import { User, Settings, BookOpen } from 'lucide-react'
 
 export default function Profile() {
   return (

@@ -71,10 +71,11 @@ export function AddChapterForm({ onSuccess }: { onSuccess?: () => void }) {
         })
         onSuccess?.()
       } else {
-        const error = await response.json()
-        setMessage(`Error: ${error.error}`)
+        const errorData = await response.json()
+        setMessage(`Error: ${errorData.error}`)
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to create chapter:', err)
       setMessage('Failed to create chapter. Please try again.')
     } finally {
       setIsSubmitting(false)

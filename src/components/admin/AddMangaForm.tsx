@@ -47,10 +47,11 @@ export function AddMangaForm({ onSuccess }: { onSuccess?: () => void }) {
         })
         onSuccess?.()
       } else {
-        const error = await response.json()
-        setMessage(`Error: ${error.error}`)
+        const errorData = await response.json()
+        setMessage(`Error: ${errorData.error}`)
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to create manga:', err)
       setMessage('Failed to create manga. Please try again.')
     } finally {
       setIsSubmitting(false)

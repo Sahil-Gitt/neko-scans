@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 interface Comic {
   id: string
@@ -67,7 +68,17 @@ export function ComicGrid() {
       {comics.map(comic => (
         <div key={comic.id} className="comic-card border border-yellow-400 p-4 rounded">
           <div className="comic-cover bg-gray-800 h-48 mb-4 flex items-center justify-center text-gray-500">
-            {comic.coverImage ? <img src={comic.coverImage} alt={comic.title} className="h-full w-full object-cover" /> : 'No Cover Available'}
+            {comic.coverImage ? (
+              <Image 
+                src={comic.coverImage} 
+                alt={comic.title} 
+                width={200}
+                height={200}
+                className="h-full w-full object-cover" 
+              />
+            ) : (
+              'No Cover Available'
+            )}
           </div>
           <div className="comic-info">
             <h3 className="comic-title text-yellow-400 text-lg font-bold mb-2">{comic.title}</h3>
