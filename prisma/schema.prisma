@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,64 +8,48 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  username  String   @unique
+  id        String     @id @default(cuid())
+  email     String     @unique
+  username  String     @unique
   password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  role      Role       @default(USER)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   favorites Favorite[]
   readings  Reading[]
 
   @@map("users")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model Comic {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   description String?
   coverImage  String?
   author      String?
-  status      Status   @default(ONGOING)
+  status      Status     @default(ONGOING)
   genres      String[]
   tags        String[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  chapters  Chapter[]
-  favorites Favorite[]
-  readings  Reading[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  chapters    Chapter[]
+  favorites   Favorite[]
+  readings    Reading[]
 
   @@map("comics")
 }
 
-enum Status {
-  ONGOING
-  COMPLETED
-  HIATUS
-  DROPPED
-}
-
 model Chapter {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   chapterNum  Float
-  pages       String[] // Array of image URLs
-  publishedAt DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  comic   Comic  @relation(fields: [comicId], references: [id], onDelete: Cascade)
-  comicId String
-
-  readings Reading[]
+  pages       String[]
+  publishedAt DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comicId     String
+  comic       Comic     @relation(fields: [comicId], references: [id], onDelete: Cascade)
+  readings    Reading[]
 
   @@unique([comicId, chapterNum])
   @@map("chapters")
@@ -77,31 +58,41 @@ model Chapter {
 model Favorite {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
-  comic   Comic  @relation(fields: [comicId], references: [id], onDelete: Cascade)
-  comicId String
+  userId    String
+  comicId   String
+  comic     Comic    @relation(fields: [comicId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, comicId])
   @@map("favorites")
 }
 
 model Reading {
-  id               String   @id @default(cuid())
-  currentPage      Int      @default(0)
-  isCompleted      Boolean  @default(false)
-  lastReadAt       DateTime @default(now())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  comic     Comic   @relation(fields: [comicId], references: [id], onDelete: Cascade)
-  comicId   String
-  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-  chapterId String
+  id          String   @id @default(cuid())
+  currentPage Int      @default(0)
+  isCompleted Boolean  @default(false)
+  lastReadAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  comicId     String
+  chapterId   String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  comic       Comic    @relation(fields: [comicId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, comicId, chapterId])
   @@map("readings")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Status {
+  ONGOING
+  COMPLETED
+  HIATUS
+  DROPPED
 }
