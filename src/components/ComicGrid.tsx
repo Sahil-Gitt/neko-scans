@@ -1,36 +1,66 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { db } from '@/lib/db'
 
 interface Comic {
   id: string
   title: string
   coverImage?: string
+  author?: string
+  status: string
+  genres: string[]
   chapters: { title: string, chapterNum: number }[]
+  _count: {
+    chapters: number
+    favorites: number
+  }
 }
 
 export function ComicGrid() {
   const [comics, setComics] = useState<Comic[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchComics() {
-      // Fetch comic data from the database
-      setComics([{
-        id: '1',
-        title: 'Sample Comic',
-        coverImage: '/path/to/image.jpg',
-        chapters: [
-          { title: 'Chapter 1', chapterNum: 1 },
-          { title: 'Chapter 2', chapterNum: 2 }
-        ]
-      }])
+      try {
+        setLoading(true)
+        const response = await fetch('/api/comics')
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch comics')
+        }
+        
+        const data = await response.json()
+        setComics(data.comics || [])
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load comics')
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchComics()
   }, [])
 
-  if (comics.length === 0) return <div className="loading text-yellow-400">Loading comics...</div>
+  if (loading) {
+    return <div className="loading text-yellow-400 text-center py-8">Loading comics...</div>
+  }
+
+  if (error) {
+    return <div className="error text-red-400 text-center py-8">Error: {error}</div>
+  }
+
+  if (comics.length === 0) {
+    return (
+      <div className="empty-state text-center py-12">
+        <div className="text-gray-400 text-lg mb-4">No manga available yet</div>
+        <div className="text-gray-500 text-sm">
+          Add some manga through the admin panel to get started!
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-8">
