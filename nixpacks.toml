@@ -1,15 +1,7 @@
 [phases.setup]
 nixPkgs = ['nodejs_18', 'openssl']
 
-[phases.build]
-cmds = [
-  'npm ci',
-  'npx prisma generate',
-  'npm run build'
-]
-
-[phases.start]
-cmd = 'npm start'
-
 [variables]
 NODE_ENV = 'production'
+NPM_CONFIG_UPDATE_NOTIFIER = 'false'
+NPM_CONFIG_FUND = 'false'
