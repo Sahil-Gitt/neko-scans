@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "prisma generate && prisma migrate deploy && next build",
-    "start": "next start",
+    "build": "prisma generate && next build",
+    "start": "prisma migrate deploy && next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "railway:deploy": "prisma migrate deploy && npm run build",
+    "railway:deploy": "npm run build",
     "railway:start": "npm start"
   },
   "dependencies": {
